@@ -1,7 +1,8 @@
 from django.db import IntegrityError
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth import login
 
 
 def signupuser(request):
@@ -21,6 +22,8 @@ def signupuser(request):
             try:
                 new_user = User.objects.create_user(input_username, password=input_password1)
                 new_user.save()
+                login(request, new_user)
+                return redirect('currenttodos')
             except IntegrityError:
                 return render(request, 'todo/signupuser.html', {
                             'form': UserCreationForm(),
@@ -31,3 +34,7 @@ def signupuser(request):
             'form': UserCreationForm(),
             'error': 'Passwords did not match',
             })
+        
+
+def currenttodos(request):
+    return render (request, 'todo/currenttodos.html')

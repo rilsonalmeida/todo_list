@@ -1,5 +1,16 @@
 {% extends 'todo/base.html' %}
 
 {% block content %}
-    Current Todos
+    <h1>Your List of Tasks</h1>
+    <ul>
+        {% for todo in todos %}
+            <li>{% if todo.is_important %}<b>{% endif %}
+                {{ todo.title }}{% if todo.is_important %}</b>{% endif %}
+                {% if todo.memo %} - {{ todo.memo|truncatechars:30 }} {% endif %}
+        </li>
+            
+        {% empty %}
+            You have no tasks. Create one ! 
+        {% endfor %}
+    </ul>
 {% endblock %}    

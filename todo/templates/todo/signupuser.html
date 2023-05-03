@@ -1,5 +1,9 @@
 <h1>Sign Up</h1>
 
+{% if error %}
+    <h2>{{ error}}</h2>
+{% endif %}
+
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}

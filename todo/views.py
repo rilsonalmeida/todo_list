@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
+from .forms import TodoForm
 
 
 def home(request):
@@ -16,9 +17,6 @@ def signupuser(request):
             'form': form,
             })    
     else:
-        # Create a new user, if passwords match
-        
-        # We must check if a new user is not found in the database (to be implemented)
         input_username = request.POST['username']
         input_password1 = request.POST['password1']
         input_password2 = request.POST['password2']
@@ -63,3 +61,21 @@ def loginuser(request):
         else:
             login(request, user)
             return redirect('currenttodos')
+
+
+
+def createtodo(request):
+    if request.method == 'GET':
+        return render(request, 'todo/create.html', {'form': TodoForm()})
+    else:    
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            new_todo = form.save(commit=False)
+            new_todo.user = request.user
+            new_todo.save()
+            return redirect('currenttodos')
+        else:
+            return render(request, 'todo/create.html', {
+                'form': TodoForm(),
+                'error': 'Bad data received. Try again.',
+                })

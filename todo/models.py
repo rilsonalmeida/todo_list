@@ -13,7 +13,7 @@ class TimestampableMixin(models.Model):
 class Todo(TimestampableMixin):
     title = models.CharField(max_length=100)
     memo = models.TextField(blank=True)
-    date_completed= models.DateTimeField(null=True, blank=True)
+    date_completed = models.DateTimeField(null=True, blank=True)
     is_important = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

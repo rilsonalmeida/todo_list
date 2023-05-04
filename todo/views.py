@@ -85,6 +85,23 @@ def createtodo(request):
 
 
 def viewtodo(request, todo_pk):
-    detail_todo = get_object_or_404(Todo, pk=todo_pk)
-    return render (request, 'todo/detailtodo.html', 
-                   context={'todo': detail_todo})
+    detail_todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    
+    if request.method == 'GET':
+        form = TodoForm(instance=detail_todo)
+        return render (request, 'todo/detailtodo.html', 
+                    context={
+                        'todo': detail_todo,
+                        'form': form
+                        })
+    else:
+        try:
+           form = TodoForm(request.POST, instance=detail_todo)
+           form.save()
+           return redirect('currenttodos')
+        except ValueError:
+            return render(request, 'todo/detailtodo.html', {
+                'todo': detail_todo,
+                'form': TodoForm(),
+                'error': 'Bad data received. Try again.',
+                })

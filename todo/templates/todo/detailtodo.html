@@ -1,19 +1,14 @@
 {% extends 'todo/base.html' %}
 
 {% block content %}
-    <h1>Detail Task {{ todo.title }}</h1>
-    <p>Important: {% if todo.is_important %}Yes{% else %}No{% endif %}<p>
-       
-    <p>Detailed Description {{ todo.memo }}</p>
+    <h1>Detail Task: {{ todo.title }}</h1>
 
-    <p>Status: 
-        {% if todo.date_completed is None %}
-            Pending
-        {% else %}
-            Finished at: {{ todo.date_completed }}
-        {% endif %}
-    </p>
+    {{ error }}
 
-    <p>Created at: {{ todo.created_at }}</p>
-    <p>Updated at: {{ todo.updated_at }}</p>
+    <form method='POST'>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Save</button>
+    </form>
 {% endblock %}    

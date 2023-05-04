@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from .forms import TodoForm
 from .models import Todo
 
+from django.utils import timezone
 
 def home(request):
     return render(request, 'todo/home.html')
@@ -105,3 +106,20 @@ def viewtodo(request, todo_pk):
                 'form': TodoForm(),
                 'error': 'Bad data received. Try again.',
                 })
+
+
+
+def completetodo(request, todo_pk):
+    detail_todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == 'POST':
+        if detail_todo.date_completed == None:
+            detail_todo.date_completed = timezone.now()
+            detail_todo.save()
+            return redirect('currenttodos')
+
+
+def deletetodo(request, todo_pk):
+    detail_todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == 'POST':
+        detail_todo.delete()
+        return redirect('currenttodos')

@@ -1,0 +1,18 @@
+{% extends 'todo/base.html' %}
+
+{% block content %}
+    <h1>Finished Tasks</h1>
+    <ul>
+        {% for todo in todos %}
+            <a href="{% url 'viewtodo' todo.pk %}">
+                <li>{% if todo.is_important %}<b>{% endif %}
+                    {{ todo.title }}{% if todo.is_important %}</b>{% endif %}
+                    {% if todo.memo %} - {{ todo.memo|truncatechars:30 }} {% endif %}
+                    {{ todo.date_completed|date:'M j Y H:i' }}
+                    </a>
+                </li>
+        {% empty %}
+            You have no completed tasks yet! 
+        {% endfor %}
+    </ul>
+{% endblock %}    

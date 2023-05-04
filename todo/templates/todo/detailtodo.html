@@ -12,11 +12,13 @@
         <button type="submit">Save</button>
     </form>
 
-    <form method='POST' action="{% url 'completetodo' todo.id %}">
-        {% csrf_token %}
+    {% if todo.date_completed is None %}
+        <form method='POST' action="{% url 'completetodo' todo.id %}">
+            {% csrf_token %}
 
-        <button type="submit">Complete</button>
-    </form>
+            <button type="submit">Complete</button>
+        </form>
+    {% endif %}
 
     <form method='POST' action="{% url 'deletetodo' todo.id %}">
         {% csrf_token %}

@@ -7,7 +7,10 @@ from .forms import TodoForm
 from .models import Todo
 
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
+
+@login_required
 def home(request):
     return render(request, 'todo/home.html')
 
@@ -39,13 +42,21 @@ def signupuser(request):
             'error': 'Passwords did not match',
             })
         
-
+@login_required
 def currenttodos(request):
     user_todos = Todo.objects.filter(user=request.user, date_completed__isnull=True)
     return render (request, 'todo/currenttodos.html', 
                    context={'todos': user_todos})
 
 
+@login_required
+def completedtodos(request):
+    user_todos = Todo.objects.filter(user=request.user, date_completed__isnull=False).order_by('-date_completed')
+    return render (request, 'todo/completedtodos.html', 
+                   context={'todos': user_todos})
+
+
+@login_required
 def logoutuser(request):
     if request.method == 'POST':
         logout(request)
@@ -67,7 +78,7 @@ def loginuser(request):
             return redirect('currenttodos')
 
 
-
+@login_required
 def createtodo(request):
     if request.method == 'GET':
         return render(request, 'todo/create.html', {'form': TodoForm()})
@@ -84,7 +95,7 @@ def createtodo(request):
                 'error': 'Bad data received. Try again.',
                 })
 
-
+@login_required
 def viewtodo(request, todo_pk):
     detail_todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     
@@ -108,7 +119,7 @@ def viewtodo(request, todo_pk):
                 })
 
 
-
+@login_required
 def completetodo(request, todo_pk):
     detail_todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == 'POST':
@@ -118,6 +129,7 @@ def completetodo(request, todo_pk):
             return redirect('currenttodos')
 
 
+@login_required
 def deletetodo(request, todo_pk):
     detail_todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == 'POST':
